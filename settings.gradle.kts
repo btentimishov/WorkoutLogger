@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "WorkoutLogger"
 include(":app")
+include(":domain")
+include(":data")
