@@ -23,3 +23,4 @@ rootProject.name = "WorkoutLogger"
 include(":app")
 include(":domain")
 include(":data")
+include(":ui_components")

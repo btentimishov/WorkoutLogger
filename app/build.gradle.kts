@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.workoutlogger"
-        minSdk = 26
+        minSdk = 28
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -45,6 +45,7 @@ dependencies {
 
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":ui_components"))
 
     //Room
     implementation(libs.androidx.room.runtime)

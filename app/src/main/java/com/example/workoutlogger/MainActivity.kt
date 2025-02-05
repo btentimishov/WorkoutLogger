@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.workoutlogger.ui.WorkoutViewModel
-import com.example.workoutlogger.ui.theme.WorkoutLoggerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,11 +29,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyWorkoutApp()
+            Text("Hello world")
+//            MyWorkoutApp()
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
+/*    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun MyWorkoutApp() {
         WorkoutLoggerTheme {
@@ -97,5 +97,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
+    }*/
+
 }
