@@ -1,49 +1,72 @@
 package com.baktyiar.ui_components.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.baktyiar.ui_components.theme.WorkoutLoggerTheme
 
 @Composable
-fun SetRow(
+fun ExerciseSetRow(
     setNumber: Int,
-    weight: Float?,
-    reps: Int?,
-    distance: Float?
+    weight: Int,
+    reps: Int,
+    isComplete: Boolean,
+    onWeightChange: (Int) -> Unit,
+    onRepsChange: (Int) -> Unit,
+    onStatusChange: () -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Set $setNumber:")
-        weight?.let {
-            Text(text = "${weight}kg")
-        }
-        reps?.let {
-            Text(text = "x $reps")
-        }
-        distance?.let {
-            Text(text = "${distance} km")
-        }
+        SetIndicator(setNumber = setNumber)
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        WeightInput(weight = weight, onWeightChange = onWeightChange)
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        RepsInput(reps = reps, onRepsChange = onRepsChange)
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        StatusButton(isComplete = isComplete, onClick = onStatusChange)
     }
 }
+
 
 @Preview(showBackground = true, name = "SetRow Weight + Reps")
 @Composable
-fun SetRowPreviewWeightReps() {
-    WorkoutLoggerTheme {
-        SetRow(setNumber = 1, weight = 50f, reps = 10, distance = null)
+fun PreviewExerciseSetRow() {
+
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        ExerciseSetRow(
+            setNumber = 1,
+            weight = 50,
+            reps = 10,
+            isComplete = false,
+            onWeightChange = {},
+            onRepsChange = {},
+            onStatusChange = {}
+        )
     }
 }
 
-@Preview(showBackground = true, name = "SetRow Distance")
-@Composable
-fun SetRowPreviewDistance() {
-    WorkoutLoggerTheme {
-        SetRow(setNumber = 1, weight = null, reps = null, distance = 5f)
-    }
-}
 
