@@ -1,4 +1,4 @@
-package com.baktyiar.ui_components.components
+package com.baktyiar.ui_components.components.set
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -55,7 +55,6 @@ fun ExerciseSetRow(
 @Preview(showBackground = true, name = "SetRow Weight + Reps")
 @Composable
 fun PreviewExerciseSetRow() {
-
     MaterialTheme(colorScheme = lightColorScheme()) {
         ExerciseSetRow(
             setNumber = 1,

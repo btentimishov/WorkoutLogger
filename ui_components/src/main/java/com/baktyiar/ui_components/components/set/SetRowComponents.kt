@@ -1,4 +1,4 @@
-package com.baktyiar.ui_components.components
+package com.baktyiar.ui_components.components.set
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,8 +36,8 @@ import com.baktyiar.ui_components.theme.WorkoutLoggerTheme
 fun SetIndicator(setNumber: Int) {
     Box(
         modifier = Modifier
-            .size(50.dp)
-            .background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(8.dp)),
+            .size(40.dp)
+            .background(MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.Center
     ) {
         Text(
