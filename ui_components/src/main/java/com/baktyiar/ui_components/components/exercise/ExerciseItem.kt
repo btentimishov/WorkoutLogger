@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.baktyiar.ui_components.components.set.ExerciseSetRow
 import com.baktyiar.ui_components.model.ExerciseSet
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExerciseItem(
     exerciseName: String,
@@ -97,7 +96,7 @@ fun ExerciseItem(
 @Preview
 @Composable
 fun PreviewExerciseItem() {
-    var sets by remember { mutableStateOf(listOf(ExerciseSet(50, 10, false))) }
+    var sets by remember { mutableStateOf(listOf(ExerciseSet(50, 10, false), ExerciseSet(50, 10, false), ExerciseSet(50, 10, false))) }
 
     MaterialTheme(colorScheme = lightColorScheme()) {
         ExerciseItem(

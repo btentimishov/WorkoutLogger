@@ -1,102 +1,86 @@
 package com.example.workoutlogger
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.workoutlogger.ui.WorkoutViewModel
+import androidx.lifecycle.lifecycleScope
+import com.baktyiar.data.local.dao.ExerciseDao
+import com.baktyiar.data.local.dao.SetDao
+import com.baktyiar.data.local.dao.WorkoutDao
+import com.baktyiar.data.local.entity.ExerciseEntity
+import com.baktyiar.data.local.entity.SetEntity
+import com.baktyiar.data.local.entity.WorkoutEntity
+import com.baktyiar.ui_components.theme.WorkoutLoggerTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var workoutDao: WorkoutDao
+    @Inject
+    lateinit var exerciseDao: ExerciseDao
+    @Inject
+    lateinit var setDao: SetDao
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        lifecycleScope.launch {
+            testDatabaseOperations()
+        }
         setContent {
-            Text("Hello world")
-//            MyWorkoutApp()
+            WorkoutLoggerTheme {
+                Text("Hello world")
+            }
         }
     }
 
-/*    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    private fun MyWorkoutApp() {
-        WorkoutLoggerTheme {
+    private suspend fun testDatabaseOperations() {
+        Log.d("WorkoutTest", "Starting database test...")
 
-            // Get an instance of WorkoutViewModel via Hilt
-            val workoutViewModel: WorkoutViewModel = viewModel()
+        // Insert Workout
+        val workoutId = workoutDao.insert(
+            WorkoutEntity(
+                title = "Test Workout",
+                dateMillis = System.currentTimeMillis()
+            )
+        )
+        Log.d("WorkoutTest", "Inserted Workout with ID: $workoutId")
 
-            // Collect the workout list from the VM
-            val workouts by workoutViewModel.workoutList.collectAsStateWithLifecycle()
+        // Insert Exercise
+        val exerciseId = exerciseDao.insert(
+            ExerciseEntity(
+                workoutId = workoutId,
+                name = "Bench Press",
+                order = 1
+            )
+        )
+        Log.d("WorkoutTest", "Inserted Exercise with ID: $exerciseId")
 
-            // Simple text field state for adding new workouts
-            var newWorkoutTitle by remember { mutableStateOf("") }
+        // Insert Set
+        val setId =
+            setDao.insert(SetEntity(exerciseId = exerciseId, weight = 80f, reps = 10, order = 1))
+        Log.d("WorkoutTest", "Inserted Set with ID: $setId")
 
-            Scaffold(
-                topBar = {
-                    TopAppBar(title = { Text("My Workout App") })
-                },
-                floatingActionButton = {
-                    FloatingActionButton(onClick = {
-                        if (newWorkoutTitle.isNotBlank()) {
-                            workoutViewModel.addNewWorkout(newWorkoutTitle)
-                            newWorkoutTitle = ""
-                        }
-                    }) {
-                        Text("+")
-                    }
-                }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+        // Retrieve Data
+        val allWorkouts = workoutDao.getAllWorkouts()
+        Log.d("WorkoutTest", "All Workouts: $allWorkouts")
 
-                    // Text field to enter workout title
-                    OutlinedTextField(
-                        value = newWorkoutTitle,
-                        onValueChange = { newWorkoutTitle = it },
-                        label = { Text("New Workout Title") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                    )
+        val workoutWithExercises = workoutDao.getWorkoutWithExercises(workoutId)
+        Log.d("WorkoutTest", "Workout with Exercises: $workoutWithExercises")
 
-                    Text("Workouts", style = MaterialTheme.typography.headlineSmall)
+        val exercises = exerciseDao.getExercisesForWorkout(workoutId)
+        Log.d("WorkoutTest", "Exercises in Workout: $exercises")
 
-                    Spacer(modifier = Modifier.height(8.dp))
+        val sets = setDao.getSetsForExercise(exerciseId)
+        Log.d("WorkoutTest", "Sets in Exercise: $sets")
 
-                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                        items(workouts) { workout ->
-                            Text(
-                                text = "- ${workout.title} (id=${workout.id})",
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }*/
-
+        // Delete Test Data
+        workoutDao.deleteWorkout(allWorkouts.first())
+        Log.d("WorkoutTest", "Deleted Workout. Remaining: ${workoutDao.getAllWorkouts()}")
+    }
 }

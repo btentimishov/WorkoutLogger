@@ -10,11 +10,12 @@ fun ExerciseEntity.toDomain(): Exercise {
         // For simplicity, ignoring sets. Add your own logic for sets if needed.
     )
 }
-
-fun Exercise.toEntity(workoutId: Long): ExerciseEntity {
-    return ExerciseEntity(
-        id = id,
-        workoutId = workoutId,
-        name = name
-    )
-}
+//
+//fun Exercise.toEntity(workoutId: Long): ExerciseEntity {
+//    return ExerciseEntity(
+//        id = id,
+//        workoutId = workoutId,
+//        name = name,
+//
+//    )
+//}
