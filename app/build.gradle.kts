@@ -78,6 +78,8 @@ dependencies {
     // Lifecycle, ViewModel for Compose
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    //dagger hilt view model for compose
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // (Optional) Navigation Compose
     implementation(libs.androidx.navigation.compose)

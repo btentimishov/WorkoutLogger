@@ -8,64 +8,68 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.baktyiar.ui_components.model.ExerciseSetUi
 
 @Composable
 fun ExerciseSetRow(
-    setNumber: Int,
-    weight: Int,
-    reps: Int,
-    isComplete: Boolean,
-    onWeightChange: (Int) -> Unit,
+    exerciseSet: ExerciseSetUi,
+    onWeightChange: (Float) -> Unit,
     onRepsChange: (Int) -> Unit,
-    onStatusChange: () -> Unit
+    onStatusChange: () -> Unit,
+    onSetDelete: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp),
+            .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        SetIndicator(setNumber = setNumber)
+        SetIndicator(setNumber = exerciseSet.order)
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        WeightInput(weight = weight, onWeightChange = onWeightChange)
+        WeightInput(weight = exerciseSet.weight, onWeightChange = onWeightChange)
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        RepsInput(reps = reps, onRepsChange = onRepsChange)
+        RepsInput(reps = exerciseSet.reps, onRepsChange = onRepsChange)
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        StatusButton(isComplete = isComplete, onClick = onStatusChange)
+        StatusButton(isComplete = exerciseSet.isComplete, onClick = onStatusChange)
+
+        IconButton(onClick = onSetDelete) {
+            Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Set")
+        }
     }
 }
 
-
-@Preview(showBackground = true, name = "SetRow Weight + Reps")
+@Preview(showBackground = true)
 @Composable
 fun PreviewExerciseSetRow() {
-    MaterialTheme(colorScheme = lightColorScheme()) {
-        ExerciseSetRow(
-            setNumber = 1,
-            weight = 50,
+    ExerciseSetRow(
+        exerciseSet = ExerciseSetUi(
+            order = 1,
+            weight = 50f,
             reps = 10,
             isComplete = false,
-            onWeightChange = {},
-            onRepsChange = {},
-            onStatusChange = {}
-        )
-    }
+            id = 1
+        ),
+        onWeightChange = { /* Handle weight change */ },
+        onRepsChange = { /* Handle reps change */ },
+        onStatusChange = { /* Handle status toggle */ },
+        onSetDelete = { /* Handle set deletion */ }
+    )
 }
-
-

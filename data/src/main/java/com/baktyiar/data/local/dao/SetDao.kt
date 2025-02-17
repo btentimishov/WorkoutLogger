@@ -17,4 +17,7 @@ interface SetDao {
 
     @Delete
     suspend fun deleteSet(set: SetEntity)
+
+    @Query("DELETE FROM sets WHERE id = :setId")
+    suspend fun deleteSetBy(setId: Long)
 }

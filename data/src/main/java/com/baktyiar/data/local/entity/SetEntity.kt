@@ -23,5 +23,6 @@ data class SetEntity(
     val exerciseId: Long,
     val weight: Float,
     val reps: Int,
-    val order: Int
+    val order: Int,
+    val isComplete: Boolean = false
 )

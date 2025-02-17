@@ -1,5 +1,6 @@
 package com.baktyiar.ui_components.components.set
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,7 +50,7 @@ fun SetIndicator(setNumber: Int) {
 }
 
 @Composable
-fun WeightInput(weight: Int, unit: String = "KG", onWeightChange: (Int) -> Unit) {
+fun WeightInput(weight: Float, unit: String = "KG", onWeightChange: (Float) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -59,7 +60,7 @@ fun WeightInput(weight: Int, unit: String = "KG", onWeightChange: (Int) -> Unit)
         TextField(
             value = weight.toString(),
             onValueChange = {
-                val newValue = it.toIntOrNull() ?: 0
+                val newValue = it.toFloatOrNull() ?: 0F
                 onWeightChange(newValue)
             },
             modifier = Modifier.width(60.dp),
@@ -75,7 +76,6 @@ fun WeightInput(weight: Int, unit: String = "KG", onWeightChange: (Int) -> Unit)
                 unfocusedIndicatorColor = Color.Transparent
             )
         )
-        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = unit,
             style = MaterialTheme.typography.bodyLarge,
@@ -101,8 +101,8 @@ fun RepsInput(reps: Int, onRepsChange: (Int) -> Unit) {
         TextField(
             value = reps.toString(),
             onValueChange = {
-                val newValue = it.toIntOrNull() ?: 0
-                onRepsChange(newValue)
+                Log.d("RepsInput", "onValueChange called with value: $it")
+                onRepsChange(it.toIntOrNull() ?: 0)
             },
             modifier = Modifier.width(60.dp),
             singleLine = true,
@@ -161,6 +161,7 @@ fun PreviewStatusButton() {
     }
 }
 
+/*
 
 @Preview
 @Composable
@@ -196,3 +197,4 @@ fun PreviewSetIndicator() {
         SetIndicator(setNumber = 1)
     }
 }
+*/

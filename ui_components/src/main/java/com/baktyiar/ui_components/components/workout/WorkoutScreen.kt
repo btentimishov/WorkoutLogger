@@ -8,102 +8,74 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.baktyiar.ui_components.components.exercise.ExerciseItem
-import com.baktyiar.ui_components.model.Exercise
-import com.baktyiar.ui_components.model.ExerciseSet
-import java.util.UUID
+import com.baktyiar.ui_components.model.ExerciseUi
+import com.baktyiar.ui_components.model.ExerciseSetUi
+import com.baktyiar.ui_components.model.WorkoutUi
 
-/*
 @Composable
 fun WorkoutScreen(
-    exercises: List<Exercise>,
-    onExercisesChange: (List<Exercise>) -> Unit
+    workout: WorkoutUi,
+    onAddExerciseButtonClick: () -> Unit,
+    onDeleteExercise: (Long) -> Unit,
+    onExercisesChange: (List<ExerciseUi>) -> Unit,
+    onAddSet: (Long) -> Unit,
+    onSetDelete: (Long, Long) -> Unit,
+    onSetChange: (Long, ExerciseSetUi) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
             .padding(16.dp)
+            .statusBarsPadding()
     ) {
-        // Header
         Text(
-            text = "Workout",
+            text = workout.title,
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onSurface
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // List of Exercises
+        HorizontalDivider(thickness = 1.dp)
+
         LazyColumn(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(exercises) { exercise ->
+            items(workout.exercises) { exercise ->
                 ExerciseItem(
                     exerciseName = exercise.name,
                     sets = exercise.sets,
-                    onAddSet = {
-                        onExercisesChange(
-                            exercises.map {
-                                if (it.id == exercise.id) {
-                                    it.copy(sets = it.sets + ExerciseSet(50, 10, false))
-                                } else it
-                            }
-                        )
+                    onAddSet = { onAddSet(exercise.id) },
+                    onDeleteExercise = { onDeleteExercise(exercise.id) },
+                    onSetChange = { set ->
+                        onSetChange(exercise.id, set)
                     },
-                    onDeleteExercise = {
-                        onExercisesChange(exercises.filter { it.id != exercise.id })
-                    },
-                    onSetChange = { setIndex, updatedSet ->
-                        onExercisesChange(
-                            exercises.map {
-                                if (it.id == exercise.id) {
-                                    it.copy(sets = it.sets.toMutableList().apply { this[setIndex] = updatedSet })
-                                } else it
-                            }
-                        )
-                    },
-                    onSetDelete = { setIndex ->
-                        onExercisesChange(
-                            exercises.map {
-                                if (it.id == exercise.id) {
-                                    it.copy(sets = it.sets.toMutableList().apply { removeAt(setIndex) })
-                                } else it
-                            }
-                        )
+                    onSetDelete = { id ->
+                        onSetDelete(id, exercise.id)
                     }
                 )
+                HorizontalDivider(thickness = 1.dp)
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Add Exercise Button
         Button(
-            onClick = {
-                onExercisesChange(
-                    exercises + Exercise(
-                        id = UUID.randomUUID().toString(),
-                        name = "New Exercise",
-                        sets = listOf(ExerciseSet(50, 10, false))
-                    )
-                )
-            },
+            onClick = onAddExerciseButtonClick,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Add Exercise")
@@ -111,14 +83,18 @@ fun WorkoutScreen(
     }
 }
 
-@Preview
+/*@Preview
 @Composable
 fun PreviewWorkoutScreen() {
     var exercises by remember { mutableStateOf(getFakeExercises()) }
 
     MaterialTheme {
         WorkoutScreen(
-            exercises = exercises,
+            workout = Workout(
+                1,
+                "Leg day",
+                exercises = exercises
+            ),
             onExercisesChange = { exercises = it }
         )
     }
@@ -143,5 +119,4 @@ fun getFakeExercises(): List<Exercise> {
             )
         )
     )
-}
-*/
+}*/

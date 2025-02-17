@@ -1,18 +1,18 @@
 package com.baktyiar.data.local.dao
 
-import androidx.room.*
-import com.baktyiar.data.local.entity.ExerciseEntity
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
 import com.baktyiar.data.local.entity.WorkoutEntity
 import com.baktyiar.data.local.entity.WorkoutWithExercises
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkoutDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(workout: WorkoutEntity): Long
-
-    @Query("SELECT * FROM workouts")
-    suspend fun getAllWorkouts(): List<WorkoutEntity>
 
     @Transaction
     @Query("SELECT * FROM workouts WHERE id = :workoutId")
@@ -20,4 +20,7 @@ interface WorkoutDao {
 
     @Delete
     suspend fun deleteWorkout(workout: WorkoutEntity)
+
+    @Query("DELETE FROM workouts WHERE id = :id")
+    suspend fun deleteWorkoutBy(id: Long)
 }

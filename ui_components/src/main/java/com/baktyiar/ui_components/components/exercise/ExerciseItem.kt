@@ -11,33 +11,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.baktyiar.ui_components.components.set.ExerciseSetRow
-import com.baktyiar.ui_components.model.ExerciseSet
+import com.baktyiar.ui_components.model.ExerciseSetUi
 
 @Composable
 fun ExerciseItem(
     exerciseName: String,
-    sets: List<ExerciseSet>,
+    sets: List<ExerciseSetUi>,
     onAddSet: () -> Unit,
     onDeleteExercise: () -> Unit,
-    onSetChange: (Int, ExerciseSet) -> Unit,
-    onSetDelete: (Int) -> Unit
+    onSetChange: (ExerciseSetUi) -> Unit,
+    onSetDelete: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -46,7 +39,6 @@ fun ExerciseItem(
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
     ) {
-        // Exercise Name Row
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -64,56 +56,30 @@ fun ExerciseItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        sets.forEachIndexed { index, set ->
+        sets.forEachIndexed { _, set ->
             ExerciseSetRow(
-                setNumber = index + 1,
-                weight = set.weight,
-                reps = set.reps,
-                isComplete = set.isComplete,
+                exerciseSet = set,
                 onWeightChange = { newWeight ->
-                    onSetChange(index, set.copy(weight = newWeight))
+                    onSetChange(set.copy(weight = newWeight))
                 },
                 onRepsChange = { newReps ->
-                    onSetChange(index, set.copy(reps = newReps))
+                    onSetChange(set.copy(reps = newReps))
                 },
                 onStatusChange = {
-                    onSetChange(index, set.copy(isComplete = !set.isComplete))
+                    onSetChange(set.copy(isComplete = !set.isComplete))
+                },
+                onSetDelete = {
+                    onSetDelete(set.id)
                 }
             )
             Spacer(modifier = Modifier.height(4.dp))
         }
 
-        // Add Set Button
         OutlinedButton(
             onClick = onAddSet,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Add Set")
         }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewExerciseItem() {
-    var sets by remember { mutableStateOf(listOf(ExerciseSet(50, 10, false), ExerciseSet(50, 10, false), ExerciseSet(50, 10, false))) }
-
-    MaterialTheme(colorScheme = lightColorScheme()) {
-        ExerciseItem(
-            exerciseName = "Bench Press",
-            sets = sets,
-            onAddSet = {
-                sets = sets + ExerciseSet(50, 10, false) // Add a new set with default values
-            },
-            onDeleteExercise = {
-                // Handle deleting the entire exercise
-            },
-            onSetChange = { index, updatedSet ->
-                sets = sets.toMutableList().apply { this[index] = updatedSet }
-            },
-            onSetDelete = { index ->
-                sets = sets.toMutableList().apply { removeAt(index) }
-            }
-        )
     }
 }
