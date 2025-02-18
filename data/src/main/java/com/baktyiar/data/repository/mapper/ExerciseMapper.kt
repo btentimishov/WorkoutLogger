@@ -24,5 +24,21 @@ fun Exercise.toEntity(workoutId: Long): ExerciseEntity {
         id = id,
         order = order,
         workoutId = workoutId,
-        name = name)
+        name = name
+    )
+}
+
+fun Exercise.toEntityWithSets(workoutId: Long): ExerciseWithSets {
+    val exerciseEntity = ExerciseEntity(
+        id = id,
+        order = order,
+        workoutId = workoutId,
+        name = name
+    )
+    val sets = sets.map {
+        it.toEntity(
+            exerciseId = id
+        )
+    }
+    return ExerciseWithSets(exerciseEntity, sets)
 }

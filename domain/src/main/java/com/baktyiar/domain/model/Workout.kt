@@ -10,7 +10,7 @@ data class Workout(
 
 data class Exercise(
     var id: Long = 0L,
-    var name: String,
+    var name: String = "",
     var order: Int,
     var sets: MutableList<ExerciseSet> = mutableListOf()
 )

@@ -1,6 +1,5 @@
 package com.example.workoutlogger.ui
 
-import android.util.Log
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -8,7 +7,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.baktyiar.ui_components.components.workout.WorkoutScreen
-import kotlinx.coroutines.delay
 
 @Composable
 fun DetailedWorkoutScreen(viewModel: DetailedWorkoutViewModel = hiltViewModel()) {
@@ -24,11 +22,13 @@ fun DetailedWorkoutScreen(viewModel: DetailedWorkoutViewModel = hiltViewModel())
         }
 
         is WorkoutUiState.Success -> {
-            Log.d("DetailedWorkoutScreen", "DetailedWorkoutScreen: ${state.workout}")
             WorkoutScreen(
                 state.workout.toUiModel(),
-                onExercisesChange = { exercises ->
-//                    viewModel.updateExercises(exercises.map { it.toDomain() })
+                onSaveWorkoutButtonClick = {
+                    viewModel.saveWorkout()
+                },
+                onExerciseChange = { exercises ->
+                    viewModel.onExerciseChange(exercises.toDomain())
                 },
                 onDeleteExercise = { id ->
                     viewModel.deleteExercise(id)

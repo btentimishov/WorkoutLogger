@@ -32,21 +32,21 @@ fun ExerciseSetRow(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-            .padding(4.dp),
+            .padding(horizontal = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         SetIndicator(setNumber = exerciseSet.order)
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(4.dp))
 
         WeightInput(weight = exerciseSet.weight, onWeightChange = onWeightChange)
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(4.dp))
 
         RepsInput(reps = exerciseSet.reps, onRepsChange = onRepsChange)
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(4.dp))
 
         StatusButton(isComplete = exerciseSet.isComplete, onClick = onStatusChange)
 

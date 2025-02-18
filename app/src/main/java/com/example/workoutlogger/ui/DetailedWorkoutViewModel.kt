@@ -41,7 +41,6 @@ class DetailedWorkoutViewModel @Inject constructor(
 
         val newEmptyExercise = Exercise(
             id = (workout.exercises.size + 1).toLong(),
-            name = "Bench press ${workout.exercises.size + 1}",
             order = workout.exercises.size + 1
         )
 
@@ -50,6 +49,25 @@ class DetailedWorkoutViewModel @Inject constructor(
         _workoutsUiState.update { WorkoutUiState.Success(updatedWorkout) }
     }
 
+    fun onExerciseChange(
+        exercise: Exercise
+    ) {
+        if (_workoutsUiState.value !is WorkoutUiState.Success) return
+        val currentState = _workoutsUiState.value as WorkoutUiState.Success
+        val workout = currentState.workout
+
+        val updatedExercises = workout.exercises.map {
+            if (it.id == exercise.id) {
+                exercise
+            } else {
+                it
+            }
+        }
+
+        val newWorkout = workout.copy(exercises = updatedExercises)
+
+        _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
+    }
 
     fun deleteExercise(id: Long) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
@@ -86,10 +104,7 @@ class DetailedWorkoutViewModel @Inject constructor(
             }
         }
 
-        // Create a new workout instance with updated exercises
         val newWorkout = workout.copy(exercises = updatedExercises)
-
-        // Update state to trigger recomposition
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
@@ -143,6 +158,15 @@ class DetailedWorkoutViewModel @Inject constructor(
         val newWorkout = workout.copy(exercises = updatedExercises)
 
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
+    }
+
+    fun saveWorkout() {
+        if (_workoutsUiState.value !is WorkoutUiState.Success) return
+        val currentState = _workoutsUiState.value as WorkoutUiState.Success
+        val workout = currentState.workout
+        viewModelScope.launch {
+            workoutRepository.insertWorkout(workout)
+        }
     }
 
 }

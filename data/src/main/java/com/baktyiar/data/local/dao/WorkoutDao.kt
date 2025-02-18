@@ -6,6 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.baktyiar.data.local.entity.ExerciseEntity
+import com.baktyiar.data.local.entity.SetEntity
 import com.baktyiar.data.local.entity.WorkoutEntity
 import com.baktyiar.data.local.entity.WorkoutWithExercises
 
@@ -13,6 +15,35 @@ import com.baktyiar.data.local.entity.WorkoutWithExercises
 interface WorkoutDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(workout: WorkoutEntity): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertExercises(exercises: List<ExerciseEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSets(sets: List<SetEntity>)
+
+    @Transaction
+    suspend fun insertWorkoutWithExercises(workoutWithExercises: WorkoutWithExercises) : Long {
+        // Insert workout and get the generated ID
+        val workoutId = insert(workoutWithExercises.workout)
+
+        // Insert exercises with the generated workoutId
+        val exercises = workoutWithExercises.exercises.map { exerciseWithSets ->
+            exerciseWithSets.exercise.copy(workoutId = workoutId) // Assign foreign key
+        }
+
+        insertExercises(exercises)
+
+
+        // Insert sets with correct exerciseId
+        val sets = workoutWithExercises.exercises.flatMap { exerciseWithSets ->
+            exerciseWithSets.sets.map { set ->
+                set.copy(exerciseId = exerciseWithSets.exercise.id) // Assign FK
+            }
+        }
+        insertSets(sets)
+        return workoutId
+    }
 
     @Transaction
     @Query("SELECT * FROM workouts WHERE id = :workoutId")

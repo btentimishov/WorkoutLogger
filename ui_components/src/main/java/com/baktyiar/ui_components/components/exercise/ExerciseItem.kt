@@ -16,21 +16,25 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.baktyiar.ui_components.components.set.ExerciseSetRow
 import com.baktyiar.ui_components.model.ExerciseSetUi
+import com.baktyiar.ui_components.model.ExerciseUi
 
 @Composable
 fun ExerciseItem(
-    exerciseName: String,
-    sets: List<ExerciseSetUi>,
+    exercise: ExerciseUi,
     onAddSet: () -> Unit,
-    onDeleteExercise: () -> Unit,
     onSetChange: (ExerciseSetUi) -> Unit,
-    onSetDelete: (Long) -> Unit
+    onSetDelete: (Long) -> Unit,
+    onExerciseChange: (ExerciseUi) -> Unit,
+    onDeleteExercise: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -44,11 +48,28 @@ fun ExerciseItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = exerciseName,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
+
+            TextField(
+                value = exercise.name,
+                onValueChange = { onExerciseChange(exercise.copy(name = it)) },
+                label = { Text("Exercise Name") },
+                modifier = Modifier.weight(1f),
+                textStyle = MaterialTheme.typography.bodyLarge,
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colorScheme.primary,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
             )
+//            Text(
+//                text = exercise.name,
+//                style = MaterialTheme.typography.titleLarge,
+//                color = MaterialTheme.colorScheme.onSurface
+//            )
             IconButton(onClick = onDeleteExercise) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Exercise")
             }
@@ -56,7 +77,7 @@ fun ExerciseItem(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        sets.forEachIndexed { _, set ->
+        exercise.sets.forEachIndexed { _, set ->
             ExerciseSetRow(
                 exerciseSet = set,
                 onWeightChange = { newWeight ->

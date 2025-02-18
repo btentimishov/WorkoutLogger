@@ -27,9 +27,10 @@ import com.baktyiar.ui_components.model.WorkoutUi
 @Composable
 fun WorkoutScreen(
     workout: WorkoutUi,
+    onSaveWorkoutButtonClick: () -> Unit,
     onAddExerciseButtonClick: () -> Unit,
     onDeleteExercise: (Long) -> Unit,
-    onExercisesChange: (List<ExerciseUi>) -> Unit,
+    onExerciseChange: (ExerciseUi) -> Unit,
     onAddSet: (Long) -> Unit,
     onSetDelete: (Long, Long) -> Unit,
     onSetChange: (Long, ExerciseSetUi) -> Unit
@@ -57,16 +58,16 @@ fun WorkoutScreen(
         ) {
             items(workout.exercises) { exercise ->
                 ExerciseItem(
-                    exerciseName = exercise.name,
-                    sets = exercise.sets,
+                    exercise = exercise,
                     onAddSet = { onAddSet(exercise.id) },
-                    onDeleteExercise = { onDeleteExercise(exercise.id) },
                     onSetChange = { set ->
                         onSetChange(exercise.id, set)
                     },
                     onSetDelete = { id ->
                         onSetDelete(id, exercise.id)
-                    }
+                    },
+                    onDeleteExercise = { onDeleteExercise(exercise.id) },
+                    onExerciseChange = onExerciseChange
                 )
                 HorizontalDivider(thickness = 1.dp)
             }
@@ -79,6 +80,14 @@ fun WorkoutScreen(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Add Exercise")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = onSaveWorkoutButtonClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Save workout")
         }
     }
 }

@@ -36,3 +36,13 @@ fun Workout.toEntity(): WorkoutEntity {
         dateMillis = dateMillis
     )
 }
+
+fun Workout.toEntityWithNestedLists(): WorkoutWithExercises {
+    val workoutEntity = WorkoutEntity(
+        id = id,
+        title = title,
+        dateMillis = dateMillis
+    )
+    val exerciseEntities = exercises.map { it.toEntityWithSets(id) }
+    return WorkoutWithExercises(workoutEntity, exerciseEntities)
+}
