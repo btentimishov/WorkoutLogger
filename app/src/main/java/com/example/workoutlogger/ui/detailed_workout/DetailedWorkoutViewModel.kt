@@ -1,4 +1,4 @@
-package com.example.workoutlogger.ui
+package com.example.workoutlogger.ui.detailed_workout
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -137,8 +137,6 @@ class DetailedWorkoutViewModel @Inject constructor(
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
         val workout = currentState.workout
-        Log.d("DetailedWorkoutViewModel", "onSetChange: $newSet")
-        Log.d("DetailedWorkoutViewModel", "exerciseId: $exerciseId")
         val updatedExercises = workout.exercises.map { exercise ->
             if (exercise.id == exerciseId) {
                 val updatedSet = exercise.sets.map {
@@ -169,6 +167,10 @@ class DetailedWorkoutViewModel @Inject constructor(
         }
     }
 
+    fun updateWorkout(workout: Workout) {
+        if (_workoutsUiState.value !is WorkoutUiState.Success) return
+        _workoutsUiState.update { WorkoutUiState.Success(workout) }
+    }
 }
 
 

@@ -6,15 +6,15 @@ import com.baktyiar.data.repository.mapper.toEntityWithNestedLists
 import com.baktyiar.domain.model.Workout
 import com.baktyiar.domain.repository.WorkoutRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class WorkoutRepositoryImpl @Inject constructor(
     private val workoutDao: WorkoutDao
 ) : WorkoutRepository {
     override fun getAllWorkouts(): Flow<List<Workout>> {
-        return flow {
-
+        return workoutDao.getAllWorkoutsWithExercises().map { workouts ->
+            workouts.map { it.toDomain() }
         }
     }
 

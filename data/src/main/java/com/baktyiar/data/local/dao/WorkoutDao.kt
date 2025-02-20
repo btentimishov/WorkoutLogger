@@ -10,6 +10,7 @@ import com.baktyiar.data.local.entity.ExerciseEntity
 import com.baktyiar.data.local.entity.SetEntity
 import com.baktyiar.data.local.entity.WorkoutEntity
 import com.baktyiar.data.local.entity.WorkoutWithExercises
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WorkoutDao {
@@ -23,7 +24,7 @@ interface WorkoutDao {
     suspend fun insertSets(sets: List<SetEntity>)
 
     @Transaction
-    suspend fun insertWorkoutWithExercises(workoutWithExercises: WorkoutWithExercises) : Long {
+    suspend fun insertWorkoutWithExercises(workoutWithExercises: WorkoutWithExercises): Long {
         // Insert workout and get the generated ID
         val workoutId = insert(workoutWithExercises.workout)
 
@@ -48,6 +49,13 @@ interface WorkoutDao {
     @Transaction
     @Query("SELECT * FROM workouts WHERE id = :workoutId")
     suspend fun getWorkoutWithExercises(workoutId: Long): WorkoutWithExercises
+
+    @Transaction
+    @Query("SELECT * FROM workouts")
+    fun getAllWorkoutsWithExercises(): Flow<List<WorkoutWithExercises>>
+
+    @Query("SELECT * FROM workouts")
+    fun getAllWorkouts(): Flow<List<WorkoutEntity>>
 
     @Delete
     suspend fun deleteWorkout(workout: WorkoutEntity)

@@ -52,9 +52,15 @@ fun ExerciseItem(
             TextField(
                 value = exercise.name,
                 onValueChange = { onExerciseChange(exercise.copy(name = it)) },
-                label = { Text("Exercise Name") },
+                placeholder = {
+                    Text(
+                        text = "Type exercise name",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                },
                 modifier = Modifier.weight(1f),
-                textStyle = MaterialTheme.typography.bodyLarge,
+                textStyle = MaterialTheme.typography.titleLarge,
                 colors = TextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -65,11 +71,7 @@ fun ExerciseItem(
                     unfocusedIndicatorColor = Color.Transparent
                 )
             )
-//            Text(
-//                text = exercise.name,
-//                style = MaterialTheme.typography.titleLarge,
-//                color = MaterialTheme.colorScheme.onSurface
-//            )
+
             IconButton(onClick = onDeleteExercise) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Exercise")
             }

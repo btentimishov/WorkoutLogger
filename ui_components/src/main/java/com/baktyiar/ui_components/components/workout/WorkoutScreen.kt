@@ -15,6 +15,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +29,7 @@ import com.baktyiar.ui_components.model.WorkoutUi
 @Composable
 fun WorkoutScreen(
     workout: WorkoutUi,
+    onWorkoutChange: (WorkoutUi) -> Unit,
     onSaveWorkoutButtonClick: () -> Unit,
     onAddExerciseButtonClick: () -> Unit,
     onDeleteExercise: (Long) -> Unit,
@@ -42,15 +45,31 @@ fun WorkoutScreen(
             .padding(16.dp)
             .statusBarsPadding()
     ) {
-        Text(
-            text = workout.title,
-            style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onSurface
+/*
+        TextField(
+            value = workout.title,
+            onValueChange = { onWorkoutChange(workout.copy(title = it)) },
+            placeholder = {
+                Text(
+                    "Enter workout title",
+                    style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                )
+            },
+            textStyle = MaterialTheme.typography.headlineMedium,
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        HorizontalDivider(thickness = 1.dp)
+        HorizontalDivider(thickness = 1.dp)*/
 
         LazyColumn(
             modifier = Modifier.weight(1f),
