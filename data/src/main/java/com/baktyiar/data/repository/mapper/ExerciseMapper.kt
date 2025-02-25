@@ -12,32 +12,16 @@ fun ExerciseWithSets.toDomain() = Exercise(
     sets = sets.map { it.toDomain() }.toMutableList()
 )
 
-
-fun ExerciseEntity.toDomain() = Exercise(
-    id = id,
-    name = name,
-    order = order
-)
-
-fun Exercise.toEntity(workoutId: Long): ExerciseEntity {
-    return ExerciseEntity(
-        id = id,
-        order = order,
-        workoutId = workoutId,
-        name = name
-    )
-}
-
 fun Exercise.toEntityWithSets(workoutId: Long): ExerciseWithSets {
     val exerciseEntity = ExerciseEntity(
-        id = id,
+        id = id ?: 0L,
         order = order,
         workoutId = workoutId,
         name = name
     )
     val sets = sets.map {
         it.toEntity(
-            exerciseId = id
+            exerciseId = exerciseEntity.id
         )
     }
     return ExerciseWithSets(exerciseEntity, sets)

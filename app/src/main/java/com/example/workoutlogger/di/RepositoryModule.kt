@@ -1,10 +1,10 @@
 package com.example.workoutlogger.di
 
-import com.baktyiar.data.repository.ExerciseRepositoryImpl
+/*import com.baktyiar.data.repository.ExerciseRepositoryImpl
 import com.baktyiar.data.repository.SetRepositoryImpl
-import com.baktyiar.data.repository.WorkoutRepositoryImpl
 import com.baktyiar.domain.repository.ExerciseRepository
-import com.baktyiar.domain.repository.SetRepository
+import com.baktyiar.domain.repository.SetRepository*/
+import com.baktyiar.data.repository.WorkoutRepositoryImpl
 import com.baktyiar.domain.repository.WorkoutRepository
 import dagger.Binds
 import dagger.Module
@@ -22,15 +22,15 @@ abstract class RepositoryModule {
         workoutRepositoryImpl: WorkoutRepositoryImpl
     ): WorkoutRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindExerciseRepository(
-        exerciseRepository: ExerciseRepositoryImpl
-    ): ExerciseRepository
+    /*    @Binds
+        @Singleton
+        abstract fun bindExerciseRepository(
+            exerciseRepository: ExerciseRepositoryImpl
+        ): ExerciseRepository
 
-    @Binds
-    @Singleton
-    abstract fun bindSetRepository(
-        setRepositoryImpl: SetRepositoryImpl
-    ): SetRepository
+        @Binds
+        @Singleton
+        abstract fun bindSetRepository(
+            setRepositoryImpl: SetRepositoryImpl
+        ): SetRepository*/
 }

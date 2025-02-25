@@ -23,15 +23,11 @@ sealed class WorkoutListUiState {
 @HiltViewModel
 class WorkoutListViewModel
 @Inject constructor(
-    private val workoutRepository: WorkoutRepository
+    workoutRepository: WorkoutRepository
 ) : ViewModel() {
     val workoutUiState: StateFlow<WorkoutListUiState> = workoutRepository.getAllWorkouts()
         .map<List<Workout>, WorkoutListUiState> { workouts ->
-            if (workouts.isEmpty()) {
-                WorkoutListUiState.Error("No workouts found")
-            } else {
-                WorkoutListUiState.Success(workouts)
-            }
+            WorkoutListUiState.Success(workouts)
         }
         .onStart { emit(WorkoutListUiState.Loading) }
         .catch { exception -> emit(WorkoutListUiState.Error(exception.message ?: "Unknown error")) }

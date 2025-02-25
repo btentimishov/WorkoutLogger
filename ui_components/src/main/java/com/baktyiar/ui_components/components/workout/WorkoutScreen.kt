@@ -32,11 +32,11 @@ fun WorkoutScreen(
     onWorkoutChange: (WorkoutUi) -> Unit,
     onSaveWorkoutButtonClick: () -> Unit,
     onAddExerciseButtonClick: () -> Unit,
-    onDeleteExercise: (Long) -> Unit,
+    onDeleteExercise: (ExerciseUi) -> Unit,
     onExerciseChange: (ExerciseUi) -> Unit,
-    onAddSet: (Long) -> Unit,
-    onSetDelete: (Long, Long) -> Unit,
-    onSetChange: (Long, ExerciseSetUi) -> Unit
+    onAddSet: (Long?) -> Unit,
+    onSetDelete: (Long?, Long?) -> Unit,
+    onSetChange: (Long?, ExerciseSetUi) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -45,31 +45,6 @@ fun WorkoutScreen(
             .padding(16.dp)
             .statusBarsPadding()
     ) {
-/*
-        TextField(
-            value = workout.title,
-            onValueChange = { onWorkoutChange(workout.copy(title = it)) },
-            placeholder = {
-                Text(
-                    "Enter workout title",
-                    style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
-                )
-            },
-            textStyle = MaterialTheme.typography.headlineMedium,
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.primary,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            )
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        HorizontalDivider(thickness = 1.dp)*/
 
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -85,10 +60,9 @@ fun WorkoutScreen(
                     onSetDelete = { id ->
                         onSetDelete(id, exercise.id)
                     },
-                    onDeleteExercise = { onDeleteExercise(exercise.id) },
+                    onDeleteExercise = { onDeleteExercise(exercise) },
                     onExerciseChange = onExerciseChange
                 )
-                HorizontalDivider(thickness = 1.dp)
             }
         }
 
@@ -110,41 +84,3 @@ fun WorkoutScreen(
         }
     }
 }
-
-/*@Preview
-@Composable
-fun PreviewWorkoutScreen() {
-    var exercises by remember { mutableStateOf(getFakeExercises()) }
-
-    MaterialTheme {
-        WorkoutScreen(
-            workout = Workout(
-                1,
-                "Leg day",
-                exercises = exercises
-            ),
-            onExercisesChange = { exercises = it }
-        )
-    }
-}
-
-fun getFakeExercises(): List<Exercise> {
-    return listOf(
-        Exercise(
-            id = UUID.randomUUID().toString(),
-            name = "Bench Press",
-            sets = listOf(
-                ExerciseSet(weight = 60, reps = 10, isComplete = false),
-                ExerciseSet(weight = 65, reps = 8, isComplete = false)
-            )
-        ),
-        Exercise(
-            id = UUID.randomUUID().toString(),
-            name = "Squat",
-            sets = listOf(
-                ExerciseSet(weight = 80, reps = 10, isComplete = false),
-                ExerciseSet(weight = 85, reps = 8, isComplete = false)
-            )
-        )
-    )
-}*/

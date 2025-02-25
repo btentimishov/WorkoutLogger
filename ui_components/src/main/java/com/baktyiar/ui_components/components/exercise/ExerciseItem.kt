@@ -32,7 +32,7 @@ fun ExerciseItem(
     exercise: ExerciseUi,
     onAddSet: () -> Unit,
     onSetChange: (ExerciseSetUi) -> Unit,
-    onSetDelete: (Long) -> Unit,
+    onSetDelete: (Long?) -> Unit,
     onExerciseChange: (ExerciseUi) -> Unit,
     onDeleteExercise: () -> Unit
 ) {

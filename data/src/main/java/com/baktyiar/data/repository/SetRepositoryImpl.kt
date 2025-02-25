@@ -4,9 +4,10 @@ import com.baktyiar.data.local.dao.SetDao
 import com.baktyiar.data.repository.mapper.toDomain
 import com.baktyiar.data.repository.mapper.toEntity
 import com.baktyiar.domain.model.ExerciseSet
-import com.baktyiar.domain.repository.SetRepository
+//import com.baktyiar.domain.repository.SetRepository
 import javax.inject.Inject
 
+/*
 class SetRepositoryImpl @Inject constructor(
     private val exerciseSetDao: SetDao) : SetRepository {
 
@@ -21,4 +22,4 @@ class SetRepositoryImpl @Inject constructor(
     override suspend fun deleteSet(id: Long) {
         exerciseSetDao.deleteSetBy(id)
     }
-}
+}*/

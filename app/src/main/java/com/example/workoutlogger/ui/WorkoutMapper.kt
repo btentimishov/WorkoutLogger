@@ -36,7 +36,7 @@ fun ExerciseSet.toUiModel(): ExerciseSetUi =
 
 fun WorkoutUi.toDomain(): Workout =
     Workout(
-        id = id!!,
+        id = id,
         title = title,
         dateMillis = dateMillis,
         exercises = exercises.map { it.toDomain() }.toMutableList())

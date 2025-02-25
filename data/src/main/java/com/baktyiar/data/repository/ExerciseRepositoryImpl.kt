@@ -5,9 +5,10 @@ import com.baktyiar.data.repository.mapper.toEntity
 import com.baktyiar.data.repository.mapper.toDomain
 import com.baktyiar.domain.model.Exercise
 import com.baktyiar.domain.model.Workout
-import com.baktyiar.domain.repository.ExerciseRepository
+//import com.baktyiar.domain.repository.ExerciseRepository
 import javax.inject.Inject
 
+/*
 class ExerciseRepositoryImpl @Inject constructor(
     private val exerciseDao: ExerciseDao
 ) : ExerciseRepository {
@@ -23,4 +24,4 @@ class ExerciseRepositoryImpl @Inject constructor(
     override suspend fun deleteWorkout(id: Long) {
         exerciseDao.deleteExerciseBy(id)
     }
-}
+}*/

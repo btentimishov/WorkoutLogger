@@ -12,7 +12,7 @@ fun SetEntity.toDomain() = ExerciseSet(
 
 fun ExerciseSet.toEntity(exerciseId: Long) = SetEntity(
     exerciseId = exerciseId,
-    weight = weight,
+    weight = weight?: 0F,
     reps = reps,
     order = order,
     isComplete = isComplete

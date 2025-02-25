@@ -55,7 +55,7 @@ fun SetIndicator(setNumber: Int) {
 }
 
 @Composable
-fun WeightInput(weight: Float, unit: String = "KG", onWeightChange: (Float) -> Unit) {
+fun WeightInput(weight: Float?, unit: String = "KG", onWeightChange: (Float) -> Unit) {
     var textValue by remember { mutableStateOf(weight.toString()) }
 
     Row(
@@ -179,41 +179,3 @@ fun PreviewStatusButton() {
         }
     }
 }
-
-/*
-
-@Preview
-@Composable
-fun PreviewRepsInput() {
-    var reps by remember { mutableStateOf(10) }
-
-    MaterialTheme(colorScheme = lightColorScheme()) {
-        RepsInput(
-            reps = reps,
-            onRepsChange = { newReps -> reps = newReps }
-        )
-    }
-}
-
-
-@Preview
-@Composable
-fun PreviewWeightInput() {
-    var weight by remember { mutableIntStateOf(50) }
-
-    MaterialTheme(colorScheme = lightColorScheme()) {
-        WeightInput(
-            weight = weight,
-            onWeightChange = { newWeight -> weight = newWeight }
-        )
-    }
-}
-
-@Preview
-@Composable
-fun PreviewSetIndicator() {
-    WorkoutLoggerTheme {
-        SetIndicator(setNumber = 1)
-    }
-}
-*/

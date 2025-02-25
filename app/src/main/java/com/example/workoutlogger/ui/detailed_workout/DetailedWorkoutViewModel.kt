@@ -24,14 +24,30 @@ class DetailedWorkoutViewModel @Inject constructor(
 
     val workoutsUiState: StateFlow<WorkoutUiState> = _workoutsUiState.asStateFlow()
 
-    fun getWorkout(id: Long) {
+    fun createEmptyWorkout() {
         viewModelScope.launch {
-            _workoutsUiState.update {
-                WorkoutUiState.Success(workoutRepository.getWorkoutById(1)!!)
-            }
+            val newWorkout = Workout(
+                id = null,
+                title = "",
+                dateMillis = System.currentTimeMillis(),
+                exercises = mutableListOf()
+            )
+            _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
         }
     }
 
+    fun getWorkout(id: Long) {
+        viewModelScope.launch {
+            _workoutsUiState.update {
+                val workoutResult = workoutRepository.getWorkoutById(id)
+                if (workoutResult != null) {
+                    WorkoutUiState.Success(workoutResult)
+                } else {
+                    WorkoutUiState.Error("Workout not found")
+                }
+            }
+        }
+    }
 
     fun addEmptyExercise() {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
@@ -40,7 +56,7 @@ class DetailedWorkoutViewModel @Inject constructor(
         val workout = currentState.workout
 
         val newEmptyExercise = Exercise(
-            id = (workout.exercises.size + 1).toLong(),
+            id = null,
             order = workout.exercises.size + 1
         )
 
@@ -57,7 +73,7 @@ class DetailedWorkoutViewModel @Inject constructor(
         val workout = currentState.workout
 
         val updatedExercises = workout.exercises.map {
-            if (it.id == exercise.id) {
+            if (it.order == exercise.order) {
                 exercise
             } else {
                 it
@@ -69,20 +85,20 @@ class DetailedWorkoutViewModel @Inject constructor(
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
-    fun deleteExercise(id: Long) {
+    fun deleteExercise(exercise: Exercise) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
         val workout = currentState.workout
 
-        val updatedExercises = workout.exercises.filter { it.id != id }
+        val updatedExercises = workout.exercises.filter { it.order != exercise.order }
 
         val newWorkout = workout.copy(exercises = updatedExercises)
 
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
-    fun addEmptySet(exerciseId: Long) {
+    fun addEmptySet(exerciseId: Long?) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
@@ -92,7 +108,7 @@ class DetailedWorkoutViewModel @Inject constructor(
             if (exercise.id == exerciseId) {
 
                 val newEmptySet = ExerciseSet(
-                    id = exercise.sets.size.plus(1).toLong(),
+                    id = null,
                     order = exercise.sets.size.plus(1),
                     weight = 0F,
                     reps = 0,
@@ -108,7 +124,7 @@ class DetailedWorkoutViewModel @Inject constructor(
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
-    fun deleteSet(id: Long, exerciseId: Long) {
+    fun deleteSet(id: Long?, exerciseId: Long?) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
@@ -130,7 +146,7 @@ class DetailedWorkoutViewModel @Inject constructor(
     }
 
     fun onSetChange(
-        exerciseId: Long,
+        exerciseId: Long?,
         newSet: ExerciseSet
     ) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
@@ -170,6 +186,12 @@ class DetailedWorkoutViewModel @Inject constructor(
     fun updateWorkout(workout: Workout) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
         _workoutsUiState.update { WorkoutUiState.Success(workout) }
+    }
+
+    fun deleteWorkout(workoutId: Long) {
+        viewModelScope.launch {
+            workoutRepository.deleteWorkout(workoutId)
+        }
     }
 }
 
