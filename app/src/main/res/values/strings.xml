@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WorkoutLogger</string>
+    <string name="workout_list_title">Workout List</string>
 </resources>

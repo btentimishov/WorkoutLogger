@@ -12,11 +12,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,12 +22,14 @@ import com.baktyiar.ui_components.model.ExerciseUi
 import com.baktyiar.ui_components.model.ExerciseSetUi
 import com.baktyiar.ui_components.model.WorkoutUi
 
+//TODO replace IDs of sets to SET objects
+
 @Composable
 fun WorkoutScreen(
     workout: WorkoutUi,
     onWorkoutChange: (WorkoutUi) -> Unit,
-    onSaveWorkoutButtonClick: () -> Unit,
-    onAddExerciseButtonClick: () -> Unit,
+    onSaveWorkoutClick: () -> Unit,
+    onAddExerciseClick: () -> Unit,
     onDeleteExercise: (ExerciseUi) -> Unit,
     onExerciseChange: (ExerciseUi) -> Unit,
     onAddSet: (Long?) -> Unit,
@@ -41,9 +39,7 @@ fun WorkoutScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White)
-            .padding(16.dp)
-            .statusBarsPadding()
+            .padding(8.dp)
     ) {
 
         LazyColumn(
@@ -69,7 +65,7 @@ fun WorkoutScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = onAddExerciseButtonClick,
+            onClick = onAddExerciseClick,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Add Exercise")
@@ -77,7 +73,7 @@ fun WorkoutScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = onSaveWorkoutButtonClick,
+            onClick = onSaveWorkoutClick,
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Save workout")

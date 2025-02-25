@@ -1,8 +1,9 @@
 package com.example.workoutlogger.ui.detailed_workout
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +39,7 @@ import com.baktyiar.ui_components.components.workout.WorkoutScreen
 import com.example.workoutlogger.ui.toDomain
 import com.example.workoutlogger.ui.toUiModel
 import androidx.compose.material3.TextFieldDefaults.colors
+import androidx.compose.ui.platform.LocalLayoutDirection
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,7 +95,9 @@ fun DetailedWorkoutScreen(
             )
         }
     ) { paddingValues ->
-        Box(modifier = Modifier.padding(paddingValues)) {
+        Box(
+            modifier = Modifier.padding(paddingValues)
+        ) {
             when (val state = uiState.value) {
                 is WorkoutUiState.Loading -> CircularProgressIndicator()
 
@@ -103,7 +106,7 @@ fun DetailedWorkoutScreen(
                     onWorkoutChange = { workout ->
                         viewModel.updateWorkout(workout.toDomain())
                     },
-                    onSaveWorkoutButtonClick = {
+                    onSaveWorkoutClick = {
                         navController.popBackStack()
                         viewModel.saveWorkout()
                     },
@@ -122,7 +125,7 @@ fun DetailedWorkoutScreen(
                     onSetDelete = { setId, exerciseId ->
                         viewModel.deleteSet(setId, exerciseId)
                     },
-                    onAddExerciseButtonClick = {
+                    onAddExerciseClick = {
                         viewModel.addEmptyExercise()
                     }
                 )
@@ -149,6 +152,15 @@ fun EditableWorkoutTitle(
                 textState = newValue
                 onTitleChange(newValue.text)
             },
+            placeholder = {
+                Text(
+                    text = "Enter Workout Title",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    style = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            },
             singleLine = true,
             textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface),
             modifier = Modifier.fillMaxWidth(),
@@ -159,12 +171,11 @@ fun EditableWorkoutTitle(
                     onDoneEditing()
                 }
             ),
-            colors = TextFieldDefaults.colors(
+            colors = colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
-                // If you also want no container background, set these to Transparent:
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
