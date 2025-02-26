@@ -28,10 +28,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.baktyiar.ui_components.components.PrimaryFAB
+import com.baktyiar.ui_components.components.WorkoutTopAppBar
 import com.baktyiar.ui_components.components.workout.WorkoutList
 import com.example.workoutlogger.R
 import com.example.workoutlogger.Screen
-import com.example.workoutlogger.ui.toUiModel
 
 @Composable
 fun WorkoutListScreen(
@@ -45,20 +46,25 @@ fun WorkoutListScreen(
             CustomTopAppBar()
         },
         floatingActionButton = {
-            WorkoutCreateFAB{
-                navController.navigate(Screen.CreateWorkout.route)
-            }
+            PrimaryFAB(
+                text = "Add",
+                onClick = {
+                    navController.navigate(Screen.CreateWorkout.route)
+                }
+            )
         }
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
             when (val state = uiState) {
                 is WorkoutListUiState.Loading -> LoadingState()
                 is WorkoutListUiState.Success -> {
-                    val workouts = state.workouts
-                    WorkoutList(workouts.map { it.toUiModel() }) { workoutId ->
+                    WorkoutList(state.workouts, onDeleteWorkout = {
+                        viewModel.deleteWorkout(it.id)
+                    }) { workoutId ->
                         navController.navigate(Screen.WorkoutDetail.createRoute(workoutId))
                     }
                 }
+
                 is WorkoutListUiState.Error -> {
                     ErrorState(message = state.message, onRetry = {})
                 }
@@ -68,20 +74,10 @@ fun WorkoutListScreen(
 }
 
 @Composable
-private fun WorkoutCreateFAB(onCLick: () -> Unit = {}) {
-    FloatingActionButton(
-        onClick = onCLick,
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary
-    ) {
-        Icon(Icons.Default.Add, contentDescription = "Create workout")
-    }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun CustomTopAppBar() {
-    TopAppBar(title = { Text(stringResource(R.string.workout_list_title)) })
+    WorkoutTopAppBar(
+        title = { Text(stringResource(R.string.workout_list_title)) },
+    )
 }
 
 @Composable

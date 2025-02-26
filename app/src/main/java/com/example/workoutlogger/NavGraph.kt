@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.workoutlogger.ui.detailed_workout.DetailedWorkoutRoute
 import com.example.workoutlogger.ui.detailed_workout.DetailedWorkoutScreen
 import com.example.workoutlogger.ui.workout_list.WorkoutListScreen
 
@@ -16,7 +17,6 @@ sealed class Screen(val route: String) {
     object WorkoutDetail : Screen("workout_detail/{workoutId}") {
         fun createRoute(workoutId: Long) = "workout_detail/$workoutId"
     }
-
     object CreateWorkout : Screen("workout_create")
 }
 
@@ -32,14 +32,14 @@ fun WorkoutNavHost(navController: NavHostController = rememberNavController()) {
         composable(Screen.WorkoutDetail.route) { backStackEntry ->
             val workoutId = backStackEntry.arguments?.getString("workoutId")?.toLongOrNull()
             if (workoutId != null) {
-                DetailedWorkoutScreen(workoutId, navController, viewModel = hiltViewModel())
+                DetailedWorkoutRoute(workoutId, navController, viewModel = hiltViewModel())
             } else {
                 Text("Invalid workout ID", color = Color.Red)
             }
         }
         composable(Screen.CreateWorkout.route) { backStackEntry ->
 
-            DetailedWorkoutScreen(-1L, navController, viewModel = hiltViewModel())
+            DetailedWorkoutRoute(-1L, navController, viewModel = hiltViewModel())
         }
     }
 }

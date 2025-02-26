@@ -38,15 +38,15 @@ fun ExerciseSetRow(
     ) {
         SetIndicator(setNumber = exerciseSet.order)
 
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(2.dp))
 
         WeightInput(weight = exerciseSet.weight, onWeightChange = onWeightChange)
 
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(2.dp))
 
         RepsInput(reps = exerciseSet.reps, onRepsChange = onRepsChange)
 
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(2.dp))
 
         StatusButton(isComplete = exerciseSet.isComplete, onClick = onStatusChange)
 

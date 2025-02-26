@@ -39,6 +39,35 @@ import androidx.compose.ui.unit.dp
 import com.baktyiar.ui_components.theme.WorkoutLoggerTheme
 
 @Composable
+fun StatusButton(
+    isComplete: Boolean,
+    onClick: () -> Unit
+) {
+    val backgroundColor =
+        if (isComplete) MaterialTheme.colorScheme.primary else Color.Gray
+    val contentColor = MaterialTheme.colorScheme.onPrimary
+
+    Box(
+        modifier = Modifier
+            .size(30.dp),
+        contentAlignment = Alignment.Center,
+
+        ) {
+        IconButton(
+            onClick = onClick
+        ) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = if (isComplete) "Complete" else "Incomplete",
+                tint = contentColor,
+                modifier = Modifier
+                    .background(backgroundColor, shape = RoundedCornerShape(4.dp))
+            )
+        }
+    }
+}
+
+@Composable
 fun SetIndicator(setNumber: Int) {
     Box(
         modifier = Modifier
@@ -134,32 +163,6 @@ fun RepsInput(reps: Int, onRepsChange: (Int) -> Unit) {
                 unfocusedIndicatorColor = Color.Transparent
             )
         )
-    }
-}
-
-@Composable
-fun StatusButton(
-    isComplete: Boolean,
-    onClick: () -> Unit
-) {
-    val backgroundColor =
-        if (isComplete) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-    val contentColor = MaterialTheme.colorScheme.onPrimary
-
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
-        IconButton(
-            onClick = onClick
-        ) {
-            Icon(
-                imageVector = if (isComplete) Icons.Default.Check else Icons.Default.Close,
-                contentDescription = if (isComplete) "Complete" else "Incomplete",
-                tint = contentColor,
-                modifier = Modifier
-                    .background(backgroundColor, shape = RoundedCornerShape(8.dp))
-            )
-        }
     }
 }
 

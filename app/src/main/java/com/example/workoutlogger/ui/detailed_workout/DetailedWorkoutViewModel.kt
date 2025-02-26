@@ -1,12 +1,13 @@
 package com.example.workoutlogger.ui.detailed_workout
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.baktyiar.domain.model.Workout
 import com.baktyiar.domain.repository.WorkoutRepository
-import com.baktyiar.domain.model.Exercise
-import com.baktyiar.domain.model.ExerciseSet
+import com.baktyiar.ui_components.model.ExerciseSetUi
+import com.baktyiar.ui_components.model.ExerciseUi
+import com.baktyiar.ui_components.model.WorkoutUi
+import com.example.workoutlogger.ui.toDomain
+import com.example.workoutlogger.ui.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,7 +27,7 @@ class DetailedWorkoutViewModel @Inject constructor(
 
     fun createEmptyWorkout() {
         viewModelScope.launch {
-            val newWorkout = Workout(
+            val newWorkout = WorkoutUi(
                 id = null,
                 title = "",
                 dateMillis = System.currentTimeMillis(),
@@ -41,7 +42,7 @@ class DetailedWorkoutViewModel @Inject constructor(
             _workoutsUiState.update {
                 val workoutResult = workoutRepository.getWorkoutById(id)
                 if (workoutResult != null) {
-                    WorkoutUiState.Success(workoutResult)
+                    WorkoutUiState.Success(workoutResult.toUiModel())
                 } else {
                     WorkoutUiState.Error("Workout not found")
                 }
@@ -55,8 +56,9 @@ class DetailedWorkoutViewModel @Inject constructor(
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
         val workout = currentState.workout
 
-        val newEmptyExercise = Exercise(
-            id = null,
+        val newEmptyExercise = ExerciseUi(
+            id = 0L,
+            name = "",
             order = workout.exercises.size + 1
         )
 
@@ -66,7 +68,7 @@ class DetailedWorkoutViewModel @Inject constructor(
     }
 
     fun onExerciseChange(
-        exercise: Exercise
+        exercise: ExerciseUi
     ) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
@@ -80,12 +82,12 @@ class DetailedWorkoutViewModel @Inject constructor(
             }
         }
 
-        val newWorkout = workout.copy(exercises = updatedExercises)
+        val newWorkout = workout.copy(exercises = updatedExercises.toMutableList())
 
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
-    fun deleteExercise(exercise: Exercise) {
+    fun deleteExercise(exercise: ExerciseUi) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
@@ -93,22 +95,22 @@ class DetailedWorkoutViewModel @Inject constructor(
 
         val updatedExercises = workout.exercises.filter { it.order != exercise.order }
 
-        val newWorkout = workout.copy(exercises = updatedExercises)
+        val newWorkout = workout.copy(exercises = updatedExercises.toMutableList())
 
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
-    fun addEmptySet(exerciseId: Long?) {
+    fun addEmptySet(exerciseToChange: ExerciseUi) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
         val workout = currentState.workout
 
         val updatedExercises = workout.exercises.map { exercise ->
-            if (exercise.id == exerciseId) {
+            if (exercise.order == exerciseToChange.order) {
 
-                val newEmptySet = ExerciseSet(
-                    id = null,
+                val newEmptySet = ExerciseSetUi(
+                    id = 0L,
                     order = exercise.sets.size.plus(1),
                     weight = 0F,
                     reps = 0,
@@ -120,19 +122,21 @@ class DetailedWorkoutViewModel @Inject constructor(
             }
         }
 
-        val newWorkout = workout.copy(exercises = updatedExercises)
+        val newWorkout = workout.copy(exercises = updatedExercises.toMutableList())
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
-    fun deleteSet(id: Long?, exerciseId: Long?) {
+    fun deleteSet(exerciseToChange: ExerciseUi, setToDelete: ExerciseSetUi) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
         val workout = currentState.workout
 
         val updatedExercises = workout.exercises.map { exercise ->
-            if (exercise.id == exerciseId) {
-                val updatedSet = exercise.sets.filter { it.id != id }
+            if (exercise.order == exerciseToChange.order) {
+                val updatedSet = exercise.sets.filter { set ->
+                    set.order != setToDelete.order
+                }
 
                 exercise.copy(sets = updatedSet.toMutableList())
             } else {
@@ -140,36 +144,35 @@ class DetailedWorkoutViewModel @Inject constructor(
             }
         }
 
-        val newWorkout = workout.copy(exercises = updatedExercises)
+        val newWorkout = workout.copy(exercises = updatedExercises.toMutableList())
 
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
 
     fun onSetChange(
-        exerciseId: Long?,
-        newSet: ExerciseSet
+        exerciseToChange: ExerciseUi,
+        newSet: ExerciseSetUi
     ) {
         if (_workoutsUiState.value !is WorkoutUiState.Success) return
 
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
         val workout = currentState.workout
         val updatedExercises = workout.exercises.map { exercise ->
-            if (exercise.id == exerciseId) {
-                val updatedSet = exercise.sets.map {
-                    if (it.id == newSet.id) {
+            if (exercise.order == exerciseToChange.order) {
+                val updatedSet = exercise.sets.map { set ->
+                    if (set.order == newSet.order) {
                         newSet
                     } else {
-                        it
+                        set
                     }
                 }
-                Log.d("DetailedWorkoutViewModel", "onSetChange: $updatedSet")
                 exercise.copy(sets = updatedSet.toMutableList())
             } else {
                 exercise
             }
         }
 
-        val newWorkout = workout.copy(exercises = updatedExercises)
+        val newWorkout = workout.copy(exercises = updatedExercises.toMutableList())
 
         _workoutsUiState.update { WorkoutUiState.Success(newWorkout) }
     }
@@ -179,12 +182,11 @@ class DetailedWorkoutViewModel @Inject constructor(
         val currentState = _workoutsUiState.value as WorkoutUiState.Success
         val workout = currentState.workout
         viewModelScope.launch {
-            workoutRepository.insertWorkout(workout)
+            workoutRepository.insertWorkout(workout.toDomain())
         }
     }
 
-    fun updateWorkout(workout: Workout) {
-        if (_workoutsUiState.value !is WorkoutUiState.Success) return
+    fun updateWorkout(workout: WorkoutUi) {
         _workoutsUiState.update { WorkoutUiState.Success(workout) }
     }
 
@@ -198,6 +200,6 @@ class DetailedWorkoutViewModel @Inject constructor(
 
 sealed class WorkoutUiState {
     object Loading : WorkoutUiState()
-    data class Success(var workout: Workout) : WorkoutUiState()
+    data class Success(var workout: WorkoutUi) : WorkoutUiState()
     data class Error(val message: String) : WorkoutUiState()
 }

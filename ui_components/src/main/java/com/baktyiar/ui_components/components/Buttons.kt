@@ -1,5 +1,7 @@
 package com.baktyiar.ui_components.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -49,17 +51,12 @@ fun SecondaryButton(
         Text(text = text, color = colorScheme.primary)
     }
 }
-//
-//@Composable
-//fun ActionIconButton() {
-//    Icon
-//}
 
 @Composable
 fun PrimaryFAB(
-    onClick: () -> Unit,
+    text: String? = null,
     modifier: Modifier = Modifier,
-    text: String? = null
+    onClick: () -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     FloatingActionButton(
@@ -73,9 +70,11 @@ fun PrimaryFAB(
     ) {
         if (text != null) {
             Text(text)
+
         } else {
-            // Or you could place an Icon here:
-            // Icon(Icons.Default.Add, contentDescription = null)
+            Icon(
+                Icons.Default.Add,
+                contentDescription = "Add")
         }
     }
 }

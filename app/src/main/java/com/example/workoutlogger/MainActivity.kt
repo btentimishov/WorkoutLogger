@@ -21,9 +21,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        lifecycleScope.launch {
-//            testDatabaseOperations()
-//        }
+        lifecycleScope.launch {
+            testDatabaseOperations()
+        }
         setContent {
             WorkoutLoggerTheme {
                 WorkoutNavHost()
