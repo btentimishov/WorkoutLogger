@@ -1,5 +1,6 @@
 package com.baktyiar.ui_components.components.workout
 
+import android.hardware.lights.Light
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -24,8 +25,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.baktyiar.ui_components.formatDate
 import com.baktyiar.ui_components.model.WorkoutUi
+import com.baktyiar.ui_components.theme.LightColors
+import androidx.compose.ui.tooling.preview.Preview
+import com.baktyiar.ui_components.model.ExerciseUi
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WorkoutList(
     workouts: List<WorkoutUi>,
@@ -87,6 +90,49 @@ fun EmptyState() {
             text = "No workouts found",
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Gray
+        )
+    }
+}
+
+@Preview
+@Composable
+fun WorkoutListPreviewEmpty() {
+    MaterialTheme(colorScheme = LightColors) {
+        WorkoutList(
+            workouts = emptyList(),
+            onDeleteWorkout = {},
+            onWorkoutClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun WorkoutListPreviewNotEmpty() {
+    MaterialTheme(colorScheme = LightColors) {
+        WorkoutList(
+            workouts = listOf(
+                WorkoutUi(
+                    id = 1,
+                    title = "Morning Workout",
+                    dateMillis = 1680602400000, // Just a random timestamp
+                    exercises = mutableListOf(
+                        ExerciseUi(id = 11, name = "Push Ups", order = 1),
+                        ExerciseUi(id = 12, name = "Sit Ups", order = 2),
+                    )
+                ),
+                WorkoutUi(
+                    id = 2,
+                    title = "Evening Workout",
+                    dateMillis = 1680688800000,
+                    exercises = mutableListOf(
+                        ExerciseUi(id = 21, name = "Squats", order = 1),
+                        ExerciseUi(id = 22, name = "Lunges", order = 2),
+                    )
+                )
+            ),
+            onDeleteWorkout = {},
+            onWorkoutClick = {}
         )
     }
 }

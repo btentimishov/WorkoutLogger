@@ -18,33 +18,33 @@ interface WorkoutDao {
     suspend fun insert(workout: WorkoutEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertExercises(exercises: List<ExerciseEntity>)
+    suspend fun insertExercises(exercises: List<ExerciseEntity>) : List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSets(sets: List<SetEntity>)
+
+    @Query("SELECT * FROM exercises WHERE workoutId = :workoutId")
+    suspend fun getExercisesByWorkoutId(workoutId: Long): List<ExerciseEntity>
 
     @Transaction
     suspend fun insertWorkoutWithExercises(workoutWithExercises: WorkoutWithExercises): Long {
         // Insert workout and get the generated ID
         val workoutId = insert(workoutWithExercises.workout)
 
-        // Insert exercises with the generated workoutId
-        val exercises = workoutWithExercises.exercises.map { exerciseWithSets ->
-            exerciseWithSets.exercise.copy(workoutId = workoutId) // Assign foreign key
-        }
+        workoutWithExercises.exercises.map { exerciseWithSets ->
+            val exercise = exerciseWithSets.exercise.copy(workoutId = workoutId)
 
-        insertExercises(exercises)
-
-
-        // Insert sets with correct exerciseId
-        val sets = workoutWithExercises.exercises.flatMap { exerciseWithSets ->
-            exerciseWithSets.sets.map { set ->
-                set.copy(exerciseId = exerciseWithSets.exercise.id) // Assign FK
+            val exerciseId = insertExercise(exercise)
+            val sets = exerciseWithSets.sets.map { set ->
+                set.copy(exerciseId = exerciseId)
             }
+            insertSets(sets)
         }
-        insertSets(sets)
         return workoutId
     }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertExercise(exercise: ExerciseEntity): Long
 
     @Transaction
     @Query("SELECT * FROM workouts WHERE id = :workoutId")

@@ -13,7 +13,6 @@ fun WorkoutLoggerTheme(
 ) {
     val colorScheme = if (darkTheme) DarkColors else LightColors
 
-    // Optional: set status bar colors, etc.
     val view = LocalView.current
     SideEffect {
         ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !darkTheme

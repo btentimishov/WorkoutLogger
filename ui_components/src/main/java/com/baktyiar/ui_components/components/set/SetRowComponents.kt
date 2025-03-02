@@ -1,10 +1,9 @@
 package com.baktyiar.ui_components.components.set
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -14,18 +13,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,7 +33,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.baktyiar.ui_components.theme.WorkoutLoggerTheme
+import com.baktyiar.ui_components.theme.Shapes
 
 @Composable
 fun StatusButton(
@@ -61,18 +58,17 @@ fun StatusButton(
                 contentDescription = if (isComplete) "Complete" else "Incomplete",
                 tint = contentColor,
                 modifier = Modifier
-                    .background(backgroundColor, shape = RoundedCornerShape(4.dp))
+                    .background(backgroundColor, shape = Shapes.extraSmall)
             )
         }
     }
 }
 
 @Composable
-fun SetIndicator(setNumber: Int) {
+fun OrderIndicator(setNumber: Int, modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
-            .size(40.dp)
-            .background(MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(8.dp)),
+        modifier = modifier
+            .size(30.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -85,28 +81,31 @@ fun SetIndicator(setNumber: Int) {
 
 @Composable
 fun WeightInput(weight: Float?, unit: String = "KG", onWeightChange: (Float) -> Unit) {
-    var textValue by remember { mutableStateOf(weight.toString()) }
+    val initialValue = if (weight == null || weight == 0.0f) "" else weight.toString()
+    var textValue by remember { mutableStateOf(initialValue) }
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
-            .padding(horizontal = 4.dp, vertical = 4.dp)
+            .background(MaterialTheme.colorScheme.surface, shape = Shapes.small)
+            .padding(vertical = 4.dp)
     ) {
-
 
         TextField(
             value = textValue,
             onValueChange = { newValue ->
                 textValue = newValue
-                val newWeight = newValue.toFloatOrNull()
-                newWeight?.let(onWeightChange)
+                newValue.toFloatOrNull()?.let(onWeightChange)
             },
-            modifier = Modifier.width(60.dp),
             singleLine = true,
+            modifier = Modifier.width(80.dp),
             textStyle = MaterialTheme.typography.bodyLarge,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             visualTransformation = VisualTransformation.None,
+            placeholder = {
+                Text("00.00")
+            },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
                 unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -127,12 +126,15 @@ fun WeightInput(weight: Float?, unit: String = "KG", onWeightChange: (Float) -> 
 
 @Composable
 fun RepsInput(reps: Int, onRepsChange: (Int) -> Unit) {
-    var textValue by remember { mutableStateOf(reps.toString()) }
+
+    val initialValue = if (reps == 0) "" else reps.toString()
+
+    var textValue by remember { mutableStateOf(initialValue) }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surface, shape = Shapes.small)
             .padding(horizontal = 4.dp, vertical = 4.dp)
     ) {
         Text(
@@ -152,6 +154,7 @@ fun RepsInput(reps: Int, onRepsChange: (Int) -> Unit) {
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             visualTransformation = VisualTransformation.None,
+            placeholder = { Text("00") },
             textStyle = MaterialTheme.typography.bodyLarge,
             colors = TextFieldDefaults.colors(
                 focusedTextColor = MaterialTheme.colorScheme.onSurface,
@@ -166,19 +169,57 @@ fun RepsInput(reps: Int, onRepsChange: (Int) -> Unit) {
     }
 }
 
+
 @Preview
 @Composable
-fun PreviewStatusButton() {
-    var isComplete by remember { mutableStateOf(false) }
-
+fun StatusButtonCompletePreview() {
     MaterialTheme(colorScheme = lightColorScheme()) {
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            StatusButton(isComplete = isComplete) {
-                isComplete = !isComplete
-            }
-            StatusButton(isComplete = !isComplete) {
-                isComplete = !isComplete
-            }
+        StatusButton(
+            isComplete = true,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun StatusButtonIncompletePreview() {
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        StatusButton(
+            isComplete = false,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+fun OrderIndicatorPreview() {
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        OrderIndicator(setNumber = 3)
+    }
+}
+
+@Preview
+@Composable
+fun WeightInputPreview() {
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        // Displaying in a Column just to keep it tidy in preview
+        Column {
+            WeightInput(weight = 0f, onWeightChange = {})
+            WeightInput(weight = 15.5f, onWeightChange = {})
+        }
+    }
+}
+
+@Preview
+@Composable
+fun RepsInputPreview() {
+    MaterialTheme(colorScheme = lightColorScheme()) {
+        // Displaying in a Column just to keep it tidy in preview
+        Column {
+            RepsInput(reps = 0, onRepsChange = {})
+            RepsInput(reps = 12, onRepsChange = {})
         }
     }
 }

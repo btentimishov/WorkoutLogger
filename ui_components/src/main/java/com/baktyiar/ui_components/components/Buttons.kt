@@ -79,28 +79,28 @@ fun PrimaryFAB(
     }
 }
 
-@Preview(showBackground = true, name = "PrimaryFAB Preview")
-@Composable
-fun PrimaryFABPreview() {
-    WorkoutLoggerTheme {
-        PrimaryFAB(onClick = {}, text = "Add")
-    }
-}
-
-
-@Preview(showBackground = true, name = "SecondaryButton Preview")
-@Composable
-fun SecondaryButtonPreview() {
-    WorkoutLoggerTheme {
-        SecondaryButton(text = "Cancel", onClick = {})
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PrimaryButtonPreview() {
-    WorkoutLoggerTheme {
-        PrimaryButton(text = "Start Workout", onClick = {})
-    }
-}
-
+//@Preview(showBackground = true, name = "PrimaryFAB Preview")
+//@Composable
+//fun PrimaryFABPreview() {
+//    WorkoutLoggerTheme {
+//        PrimaryFAB(onClick = {}, text = "Add")
+//    }
+//}
+//
+//
+//@Preview(showBackground = true, name = "SecondaryButton Preview")
+//@Composable
+//fun SecondaryButtonPreview() {
+//    WorkoutLoggerTheme {
+//        SecondaryButton(text = "Cancel", onClick = {})
+//    }
+//}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PrimaryButtonPreview() {
+//    WorkoutLoggerTheme {
+//        PrimaryButton(text = "Start Workout", onClick = {})
+//    }
+//}
+//

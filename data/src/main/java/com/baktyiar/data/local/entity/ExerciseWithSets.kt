@@ -7,7 +7,8 @@ data class ExerciseWithSets(
     @Embedded val exercise: ExerciseEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "exerciseId"
+        entityColumn = "exerciseId",
+        entity = SetEntity::class
     )
     val sets: List<SetEntity> = emptyList()
 )

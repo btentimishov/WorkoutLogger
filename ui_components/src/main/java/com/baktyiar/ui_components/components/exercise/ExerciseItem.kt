@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -29,8 +28,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.baktyiar.ui_components.components.SecondaryButton
 import com.baktyiar.ui_components.components.set.ExerciseSetRow
+import com.baktyiar.ui_components.components.set.OrderIndicator
 import com.baktyiar.ui_components.model.ExerciseSetUi
 import com.baktyiar.ui_components.model.ExerciseUi
+import com.baktyiar.ui_components.theme.Shapes
 
 @Composable
 fun ExerciseItem(
@@ -46,7 +47,7 @@ fun ExerciseItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.surface, shape = Shapes.small)
             .padding(16.dp)
     ) {
         Row(
@@ -54,7 +55,13 @@ fun ExerciseItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-
+            OrderIndicator(
+                exercise.order,
+                modifier = Modifier.background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = Shapes.small
+                )
+            )
             TextField(
                 value = exercise.name,
                 onValueChange = { onExerciseChange(exercise.copy(name = it)) },
